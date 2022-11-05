@@ -1,0 +1,20 @@
+While($true)
+{
+$check = az vm list --query "[].id" -o tsv
+$list = @($check)
+foreach ($id in $list)
+{
+$status = az vm show --ids $id --show-details --query powerState -o tsv
+
+if ($status -match 'VM running' -or $status -match 'VM running')
+{
+echo "VM running"
+}
+else
+{
+echo "start deallocated $id"
+az vm start --ids $id --no-wait
+}
+}
+Start-Sleep -s 0
+}
